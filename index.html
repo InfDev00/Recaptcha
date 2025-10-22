@@ -4,7 +4,7 @@
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>reCAPTCHA v2</title>
-        <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
+        <script src="https://www.google.com/recaptcha/enterprise.js?onload=onloadCallback&render=explicit" async defer></script>
         <style>
             html,body{
                 height: 100%;
@@ -31,33 +31,20 @@
             <p id="result"></p>
         </div>
         <script>
-            const SITE_KEY = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
+            const SITE_KEY = "6LeDkvIrAAAAAGvE1-HJhoDbZVXiN8Z9DJMvpatG";
             
-            function onSubmlt(token){
+            function onSubmit(token){
                 try{
                     window.vuplex?.postMessage(JSON.stringify({type:"recaptcha", token}));
                 } catch(e){}
                 document.getElementById("result").textContent = "✅ Token received";
             }
-            function onError(){console.error("error-callback");}
-            function onExpired(){console.warn("expired-callback");}
-
-            function drawReCaptcha(){
-                grecaptcha.render("recaptcha", {
-                    sitekey: SITE_KEY,
-                    size: "normal",
-                    callback : onSubmlt,
-                    "error-callback" : onError,
-                    "expired-callback" : onExpired
+            var onloadCallback = function(){
+                grecaptcha.enterprise.render('recaptcha', {
+                    sitekey : SITE_KEY,
+                    callback: onSubmit
                 });
-            }
-
-            document.addEventListener("DOMContentLoaded", () =>{
-                (function wait(){
-                    if(window.grecaptcha && typeof grecaptcha.render === "function") drawReCaptcha();
-                    else setTimeout(wait, 80);
-                })();
-            })
+            };
         </script>
     </body>
 </html>
